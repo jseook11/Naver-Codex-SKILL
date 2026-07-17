@@ -4,7 +4,7 @@
 
 Agent Skills를 지원하는 에이전트에게 저장소 주소와 설치할 스킬 이름을 알려줍니다.
 
-> https://github.com/jseook11/naver-map-serp.git 저장소에서 `search-naver-map` 스킬을 설치해줘. Python 실행 환경을 스킬 폴더 안에 준비하고 `bin/naver-place capabilities --json`까지 확인해줘.
+> https://github.com/jseook11/Naver-Codex-SKILL.git 저장소에서 `search-naver-map` 스킬을 설치해줘. Python 실행 환경을 스킬 폴더 안에 준비하고 `bin/naver-place capabilities --json`까지 확인해줘.
 
 설치가 끝나면 아래 두 명령이 성공해야 합니다.
 
@@ -19,8 +19,8 @@ bin/naver-place capabilities --json
 Python 3.10 이상이 필요합니다.
 
 ```bash
-git clone https://github.com/jseook11/naver-map-serp.git
-cd naver-map-serp/search-naver-map
+git clone https://github.com/jseook11/Naver-Codex-SKILL.git
+cd Naver-Codex-SKILL/search-naver-map
 python3 scripts/bootstrap.py
 bin/naver-place capabilities --json
 ```
