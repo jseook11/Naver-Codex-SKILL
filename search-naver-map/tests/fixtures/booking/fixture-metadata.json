@@ -1,0 +1,12 @@
+{
+  "capability": "booking.availability",
+  "capture_date": "2026-07-13",
+  "source_url_class": "naver-booking-public-graphql-synthetic-sanitized",
+  "parser_contract": "v1",
+  "sanitized": [
+    "no cookies, authorization data, tokens, or request IDs",
+    "synthetic business, item, slot, text, and image values",
+    "fixed dates and deterministic ordering",
+    "no reservation submission or mutation payloads"
+  ]
+}

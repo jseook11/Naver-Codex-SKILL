@@ -1,0 +1,12 @@
+{
+  "capability": "place.reviews",
+  "capture_date": "2026-07-13",
+  "source_url_class": "naver-place-public-graphql-synthetic-sanitized",
+  "parser_contract": "v1",
+  "sanitized": [
+    "no cookies or authorization headers",
+    "synthetic review text and nicknames",
+    "deterministic review and cursor IDs",
+    "receipt and reviewer identifiers are intentionally fake privacy sentinels"
+  ]
+}

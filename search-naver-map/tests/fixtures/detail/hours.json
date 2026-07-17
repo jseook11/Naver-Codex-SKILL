@@ -1,0 +1,37 @@
+{
+  "data": {
+    "business": {
+      "base": {
+        "id": "1001",
+        "name": "샘플 제주 게스트하우스"
+      },
+      "newBusinessHours": [
+        {
+          "name": "영업시간",
+          "businessStatusDescription": {
+            "status": "영업 중",
+            "blindDescription": "",
+            "description": "22:00에 영업 종료",
+            "showEndsNextDay": false
+          },
+          "businessHours": [
+            {
+              "day": "월",
+              "businessHours": {
+                "start": "09:00",
+                "end": "22:00"
+              },
+              "breakHours": [],
+              "description": "",
+              "lastOrderTimes": [],
+              "showEndsNextDay": false
+            }
+          ],
+          "comingIrregularClosedDays": [],
+          "comingRegularClosedDays": "",
+          "freeText": ""
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+
+SKILL_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+PYTHON="$SKILL_DIR/.venv/bin/python"
+
+if [ ! -x "$PYTHON" ]; then
+  printf '%s\n' '{"schema_version":"1","status":"error","capability":"cli","request":{"view":"standard"},"data":{},"provenance":[],"completeness":{"complete":false,"stop_reason":"dependency_missing","pages_fetched":null,"requested_count":null,"returned_count":null},"budget":{"requests_used":0,"request_limit":null,"elapsed_seconds":0.0,"elapsed_limit_seconds":null},"warnings":[],"errors":[{"code":"dependency_missing","message":"skill runtime is missing; ask the agent to run scripts/bootstrap.py","operation":"bootstrap","http_status":null,"retryable":false,"detail":{}}]}'
+  exit 3
+fi
+
+cd "$SKILL_DIR"
+exec "$PYTHON" -m naver_place.cli "$@"

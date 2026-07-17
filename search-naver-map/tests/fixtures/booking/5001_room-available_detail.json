@@ -1,0 +1,26 @@
+{
+  "data": {
+    "bizItem": {
+      "id": "room-available",
+      "businessId": "5001",
+      "bizItemId": "room-available",
+      "name": "스탠다드 트윈",
+      "desc": "기본 출력에서 제거되어야 하는 긴 객실 설명입니다.",
+      "priceByDates": {
+        "2026-07-20": 80000,
+        "2026-07-21": 90000
+      },
+      "typeValues": [
+        {"code": "CD128", "codeValue": "2"},
+        {"code": "CD129", "codeValue": "4"}
+      ],
+      "bizItemResources": [
+        {
+          "resourceUrl": "https://example.invalid/room-available.jpg",
+          "order": 1,
+          "resourceTypeCode": "image"
+        }
+      ]
+    }
+  }
+}

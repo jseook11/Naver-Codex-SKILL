@@ -1,0 +1,6 @@
+{
+  "business_id": "5001",
+  "item_ids": ["room-available", "room-unknown"],
+  "availability": [true, null],
+  "standard_omits": ["description", "images", "options"]
+}

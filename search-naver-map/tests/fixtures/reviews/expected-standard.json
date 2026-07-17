@@ -1,0 +1,6 @@
+{
+  "place_id": "1234567890",
+  "returned_count": 3,
+  "review_ids": ["review-001", "review-002", "review-003"],
+  "owner_reply_flags": [false, true, false]
+}

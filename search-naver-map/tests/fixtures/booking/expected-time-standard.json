@@ -1,0 +1,7 @@
+{
+  "business_id": "7001",
+  "item_ids": ["time-1"],
+  "availability": [true],
+  "slot_ids": ["slot-1800"],
+  "standard_omits": ["description", "images", "options"]
+}

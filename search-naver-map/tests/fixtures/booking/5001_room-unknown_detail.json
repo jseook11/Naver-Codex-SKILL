@@ -1,0 +1,17 @@
+{
+  "data": {
+    "bizItem": {
+      "id": "room-unknown",
+      "businessId": "5001",
+      "bizItemId": "room-unknown",
+      "name": "정보 확인 필요 객실",
+      "desc": "용량과 재고가 누락된 경우를 검증하는 합성 데이터입니다.",
+      "priceByDates": {
+        "2026-07-20": 70000,
+        "2026-07-21": 70000
+      },
+      "typeValues": [],
+      "bizItemResources": []
+    }
+  }
+}

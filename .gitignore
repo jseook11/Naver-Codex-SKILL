@@ -1,0 +1,28 @@
+# Repository allowlist: ignore every root entry unless explicitly included.
+/*
+!/.github/
+!/.github/**
+!/.gitignore
+!/LICENSE
+!/README.md
+!/search-naver-map/
+!/search-naver-map/**
+
+# Never include local runtimes, caches, captures, or credentials.
+**/.venv/
+**/__pycache__/
+*.py[cod]
+**/.pytest_cache/
+**/.coverage
+**/htmlcov/
+**/output/
+**/outputs/
+**/raw/
+**/*.raw.json
+**/searchad-keywords/
+**/.env
+**/.env.*
+!**/.env.example
+**/.DS_Store
+**/*.swp
+**/*~

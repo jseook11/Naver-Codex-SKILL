@@ -1,0 +1,22 @@
+{
+  "total": 3,
+  "items": [
+    {
+      "id": "review-003",
+      "cursor": "cursor-003",
+      "body": "예약 시간에 맞춰 바로 이용했어요.",
+      "visited": "2026.07.03",
+      "created": "2026-07-03T12:00:00+09:00",
+      "visitCount": 3,
+      "nickname": "테스트방문자3",
+      "receiptInfoUrl": "https://example.invalid/private-receipt-3",
+      "author": {
+        "id": "private-author-id-3",
+        "nickname": "테스트방문자3"
+      },
+      "votedKeywords": [],
+      "media": [],
+      "reply": null
+    }
+  ]
+}

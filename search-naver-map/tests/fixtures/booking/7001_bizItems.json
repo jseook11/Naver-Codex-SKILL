@@ -1,0 +1,21 @@
+{
+  "data": {
+    "bizItems": [
+      {
+        "id": "time-1",
+        "businessId": "7001",
+        "bizItemId": "time-1",
+        "name": "저녁 예약",
+        "desc": "기본 출력에서 제거되어야 하는 상품 설명입니다.",
+        "maxBookingCount": 4,
+        "bizItemResources": [
+          {
+            "resourceUrl": "https://example.invalid/time-item.jpg",
+            "order": 1,
+            "resourceTypeCode": "image"
+          }
+        ]
+      }
+    ]
+  }
+}

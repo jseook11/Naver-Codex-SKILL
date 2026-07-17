@@ -1,0 +1,4 @@
+interface:
+  display_name: "Naver Place Toolkit"
+  short_description: "네이버 지도·장소·리뷰·예약 정보를 자유롭게 탐색"
+  default_prompt: "Use $search-naver-map to interpret my goal and autonomously combine only the public read-only Naver Place capabilities needed, preserving provenance and partial failures."

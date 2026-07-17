@@ -1,0 +1,32 @@
+{
+  "data": {
+    "schedule": {
+      "bizItemSchedule": {
+        "daily": [
+          {
+            "date": "2026-07-20",
+            "summary": {
+              "dateKey": "2026-07-20",
+              "stock": null,
+              "bookingCount": null,
+              "isBusinessDay": true,
+              "isSaleDay": true,
+              "prices": [{"name": "기본가", "price": 70000}]
+            }
+          },
+          {
+            "date": "2026-07-21",
+            "summary": {
+              "dateKey": "2026-07-21",
+              "stock": null,
+              "bookingCount": null,
+              "isBusinessDay": true,
+              "isSaleDay": true,
+              "prices": [{"name": "기본가", "price": 70000}]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

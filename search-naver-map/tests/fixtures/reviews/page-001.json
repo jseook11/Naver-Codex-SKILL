@@ -1,0 +1,51 @@
+{
+  "total": 3,
+  "items": [
+    {
+      "id": "review-001",
+      "cursor": "cursor-001",
+      "body": "직원 응대가 친절했고 매장이 깔끔했어요.",
+      "visited": "2026.07.01",
+      "created": "2026-07-01T12:00:00+09:00",
+      "visitCount": 2,
+      "nickname": "테스트방문자1",
+      "receiptInfoUrl": "https://example.invalid/private-receipt-1",
+      "author": {
+        "id": "private-author-id-1",
+        "objectId": "private-object-id-1",
+        "nickname": "테스트방문자1",
+        "review": {
+          "totalCount": 99,
+          "imageCount": 10
+        }
+      },
+      "votedKeywords": [
+        {"code": "kind", "name": "친절해요"}
+      ],
+      "media": [],
+      "reply": null
+    },
+    {
+      "id": "review-002",
+      "cursor": "cursor-002",
+      "body": "메뉴 설명이 이해하기 쉬웠어요.",
+      "visited": "2026.07.02",
+      "created": "2026-07-02T12:00:00+09:00",
+      "visitCount": 1,
+      "nickname": "테스트방문자2",
+      "receiptInfoUrl": "https://example.invalid/private-receipt-2",
+      "author": {
+        "id": "private-author-id-2",
+        "nickname": "테스트방문자2"
+      },
+      "votedKeywords": [
+        {"code": "explain", "name": "설명이 자세해요"}
+      ],
+      "media": [{"type": "image", "thumbnail": "https://example.invalid/image.jpg"}],
+      "reply": {
+        "body": "방문해 주셔서 감사합니다.",
+        "created": "2026-07-03T12:00:00+09:00"
+      }
+    }
+  ]
+}

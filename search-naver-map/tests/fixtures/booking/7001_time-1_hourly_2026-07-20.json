@@ -1,0 +1,24 @@
+{
+  "data": {
+    "schedule": {
+      "bizItemSchedule": {
+        "hourly": [
+          {
+            "slotId": "slot-1800",
+            "unitStartDateTime": "2026-07-20T18:00:00+09:00",
+            "unitStartTime": "18:00",
+            "unitStock": 5,
+            "unitBookingCount": 1,
+            "isBusinessDay": true,
+            "isSaleDay": true,
+            "isUnitBusinessDay": true,
+            "isUnitSaleDay": true,
+            "isHoliday": false,
+            "duration": 60,
+            "prices": [{"name": "1인", "price": 15000}]
+          }
+        ]
+      }
+    }
+  }
+}
