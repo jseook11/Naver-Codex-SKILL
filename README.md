@@ -1,5 +1,7 @@
 # Search Naver Map
 
+![Search Naver Map — Naver Map 검색, Place 상세, 리뷰, 예약 조회](.github/social-preview.jpg)
+
 Search Naver Map은 에이전트가 네이버 지도, Place, 방문자 리뷰, 공개 예약 정보를 조회할 때 쓰는 로컬 CLI와 스킬입니다.
 
 검색·상세·리뷰·예약 조회를 네 개 명령으로 제공합니다. 에이전트는 자연어 요청에 맞춰 필요한 명령을 고르고, 결과에는 출처, 조회 시각, 확인 범위, 확인하지 못한 정보와 오류가 함께 담깁니다.
