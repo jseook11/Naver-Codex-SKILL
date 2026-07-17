@@ -1,23 +1,19 @@
 # Search Naver Map
 
-에이전트가 자연어 요청을 해석해 네이버 지도·플레이스·리뷰·예약 도구를 자유롭게 조합하는 Agent Skill입니다.
+네이버 지도 검색, Place 상세 정보, 방문자 리뷰, 공개 예약 정보를 읽는 CLI와 Agent Skill 지침입니다.
 
-## 에이전트에게 설치시키기
+## 설치 확인
 
-Agent Skills를 지원하는 에이전트에게 저장소 URL과 함께 이렇게 요청합니다.
-
-> https://github.com/jseook11/naver-map-serp.git 저장소의 스킬을 설치해줘. `SKILL.md`와 설치 문서를 읽고 전용 실행환경까지 준비한 다음 `capabilities --json`으로 정상 설치를 확인해줘.
-
-에이전트는 스킬을 복사하거나 연결하고 다음 bootstrap을 실행합니다.
+이 폴더를 에이전트의 스킬 경로에 복사하거나 연결한 뒤 실행 환경을 준비합니다.
 
 ```bash
 python3 scripts/bootstrap.py
 bin/naver-place capabilities --json
 ```
 
-시스템 Python에는 패키지를 설치하지 않습니다. 스킬 폴더의 `.venv`만 사용합니다.
+Python 3.10 이상이 필요합니다. 의존성은 `.venv`에만 설치되며 환경이 이미 최신이면 다시 설치하지 않습니다.
 
-직접 검증하려면:
+Git 저장소부터 내려받아 확인하려면 다음 명령을 사용합니다.
 
 ```bash
 git clone https://github.com/jseook11/naver-map-serp.git
@@ -26,44 +22,52 @@ python3 scripts/bootstrap.py
 bin/naver-place capabilities --json
 ```
 
-## 대표 사용 장면
+에이전트에게 설치를 맡길 때는 저장소 주소와 함께 아래처럼 요청하면 됩니다.
 
-설치 후 사용자는 스크립트나 옵션을 배울 필요 없이 자연어로 요청합니다.
+> `search-naver-map` 스킬을 설치하고 전용 실행 환경을 준비한 뒤, 명령 목록이 정상적으로 출력되는지 확인해줘.
 
-> 제주 게스트하우스 중 7월 20일부터 22일까지 남자 2명이 묵을 수 있고, 서귀포가 아니며, 실제 예약 가능한 객실이 있는 곳을 찾아줘.
+## 빠른 실행
 
-숙소 찾기는 대표 데모일 뿐 제품 범위가 아닙니다. 같은 capability를 에이전트가 다르게 조합할 수 있습니다.
+```bash
+# 장소 검색
+bin/naver-place search --query "성수 떡볶이" --limit 5
 
-- 떡볶이를 파는 장소 후보와 메뉴 근거 찾기
-- 특정 키워드에서 한 매장의 지도 노출 순위 확인
-- 리뷰 신호를 이용한 장소 비교
-- 자영업자의 매장·경쟁점 공개 정보 조사
-- 식당의 특정 날짜·시간대 예약 가능 여부 확인
+# Place 상세
+bin/naver-place detail --place 1234567890
 
-## 철학
+# 방문자 리뷰
+bin/naver-place reviews --place 1234567890 --limit 20
 
-이 저장소는 검색 workflow를 코드에 고정하지 않습니다.
-
-```text
-사용자 의도
-    ↓
-에이전트의 추론
-    ↓
-search / detail / reviews / booking 자유 조합
-    ↓
-출처·완전성·오류가 명시된 결과
+# 숙박 예약 정보
+bin/naver-place booking \
+  --query "제주 게스트하우스" \
+  --check-in 2026-07-20 \
+  --check-out 2026-07-22 \
+  --guests 2
 ```
 
-스킬은 도구의 능력, 입력, 출력, 오류, 안전 경계를 설명합니다. 어떤 순서로 무엇을 찾고 어떻게 추천할지는 에이전트가 사용자 요청에 맞춰 판단합니다.
+명령은 JSON을 출력합니다. `status`가 `partial`이면 확인된 데이터가 남아 있어도 일부 조회가 끝나지 않은 상태입니다. `errors`, `warnings`, `completeness`를 함께 확인하세요.
 
-## 안전 범위
+조회·출력 범위는 `--view compact|standard|full`로 조절합니다. `compact`와 `standard`는 긴 설명과 이미지 배열을 줄이고 리뷰어 ID, 영수증 URL, 프로필 이미지 등을 제외합니다. `booking --view full`은 설명·이미지·옵션을 위해 추가 조회를 할 수 있습니다.
 
-공개된 읽기 전용 정보만 조회합니다. 로그인, CAPTCHA 우회, 예약 제출, 결제, 리뷰 작성은 지원하지 않습니다. 예약 가능 여부와 가격은 조회 시점의 관찰값이며 확정 예약을 보장하지 않습니다.
+## 문서 안내
 
-자세한 내용:
+- 처음 설치하거나 경로를 바꿀 때: [installation.md](references/installation.md)
+- 명령 인수와 출력 필드를 확인할 때: [capabilities.md](references/capabilities.md)
+- 상태·오류·종료 코드를 처리할 때: [result-contract.md](references/result-contract.md)
+- 코드 구조와 데이터 흐름을 볼 때: [architecture.md](references/architecture.md)
+- 자연어 요청 예시가 필요할 때: [usage-examples.md](references/usage-examples.md)
 
-- [설치](references/installation.md)
-- [capability 목록](references/capabilities.md)
-- [결과와 오류 계약](references/result-contract.md)
-- [숙소 탐색 예시](references/examples-accommodation.md)
-- [자영업자 활용 예시](references/examples-business.md)
+## 개발
+
+```bash
+python3 scripts/bootstrap.py --dev
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest -p no:cacheprovider
+.venv/bin/python -m compileall -q naver_place scripts
+```
+
+저장된 테스트 데이터는 네트워크 없이 파서와 결과 형식을 검증하는 용도입니다. 실제 서비스 응답은 시점과 화면 변경에 따라 달라질 수 있습니다.
+
+## 지원하지 않는 작업
+
+로그인, CAPTCHA 우회, 예약 신청, 결제, 리뷰 게시, 매장 정보 수정은 지원하지 않습니다. API 키나 사용자 계정 정보를 입력받지 않습니다.

@@ -1,17 +1,13 @@
 ---
 name: search-naver-map
-description: Use public, read-only Naver Map, Place, review, and Booking capabilities when an agent needs to discover Korean places, inspect place data, analyze public reviews, or check public booking availability. The agent decides how to combine capabilities from the user's intent. Do not use for reservation submission, login, payment, review posting, access-control bypass, Naver Blog SERP tracking, or non-Naver services.
+description: Use public Naver Map, Place, visitor-review, and Booking data to find Korean places, inspect place details, compare public reviews, or check observed booking availability. Use only for public read-only research. Do not use for login, reservation submission, payment, review posting, access-control bypass, Naver Blog SERP tracking, or non-Naver services.
 ---
 
 # Search Naver Map
 
-This skill provides composable Naver Place capabilities. Interpret the user's request, inspect the available capability contracts, and select any useful combination. Do not force requests through a predefined workflow or limit use to the examples in this skill.
+Use the bundled CLI to collect public Naver place evidence for the user's request. Resolve every path relative to this file.
 
-Resolve all paths relative to this `SKILL.md`.
-
-## Runtime
-
-Use the isolated runtime created by the bundled bootstrap:
+## Setup
 
 ```bash
 SKILL_DIR="<directory containing this SKILL.md>"
@@ -24,75 +20,53 @@ fi
 bin/naver-place capabilities --json
 ```
 
-If bootstrap or dependency verification fails, report the exact failure. Do not install packages into the user's system Python as a workaround.
+If setup fails, report the command and error. Do not install dependencies into the system Python.
 
-## Capability Catalog
+## Commands
 
-`bin/naver-place capabilities --json` is the authoritative machine-readable catalog. The public capabilities are independent tools:
+Read `capabilities --json` before assuming an argument or enum.
 
-- `search`: search public Naver Map results and return ordered Place summaries, Place IDs, addresses, coordinates, ranks, and reservation URLs when exposed.
-- `detail`: inspect a known Place ID or URL and return public profile, hours status, links, menus, media metadata, feeds, and blog-review metadata.
-- `reviews`: inspect public visitor reviews with bounded cursor pagination and optional owner-reply filtering.
-- `booking`: inspect public Naver Booking businesses, accommodation inventory, date prices, capacity, options, or time-booking slots.
+- `search`: find ordered places for a Map query and return IDs, addresses, coordinates, observed positions, and links.
+- `detail`: read the public profile, hours, menus, links, feeds, and blog-review metadata for a Place ID or URL.
+- `reviews`: read a bounded number of public visitor reviews and optionally filter by owner-reply state.
+- `booking`: read public accommodation inventory, date prices, capacity, options, or time slots from a query, Booking URL, or business ID.
 
-The agent owns:
+Choose the commands needed for the evidence requested. Do not apply a fixed search sequence or add industry-specific recommendation rules.
 
-- interpreting natural-language intent;
-- choosing tools and call order;
-- deciding whether more evidence is needed;
-- constructing generic place, item, option, date, time, or text filters;
-- comparing candidates and explaining recommendations.
+## Read every result before answering
 
-The skill does not encode domain-specific recommendation rules. A request may concern accommodation, food, products, local-business research, audience signals in reviews, or a use not anticipated by the examples.
+- Check `status`, `completeness`, `warnings`, and `errors` even when the process exits with code `0`.
+- Keep usable `partial` data, but state what could not be checked and why.
+- Treat `is_available: null` as unknown, never as available.
+- Treat prices, inventory, hours, and observed search positions as point-in-time evidence from `fetched_at`.
+- Do not present fixture replay time as live observation time.
+- Use `compact` or `standard` unless the request needs descriptions, media, options, or extended public reviewer fields.
 
-## Result Contract
+Include relevant Place or Booking links in the response. If the visible source page is incomplete, do not describe the result as an exhaustive ranking or collection.
 
-New commands emit a versioned JSON envelope with:
+## Safety
 
-- `status`: `ok`, `empty`, `partial`, or `error`;
-- `data`: usable normalized data, including partial data when available;
-- `provenance`: which public surface or fixture produced each portion;
-- `completeness`: whether the bounded request completed and why it stopped;
-- `warnings` and typed `errors`;
-- request-count and elapsed-time budget usage.
-
-Always inspect `status`, `completeness`, `warnings`, and `errors` before presenting a conclusion. Never describe a partial result as exhaustive. Treat live public availability as observed evidence at `fetched_at`, not as a reservation guarantee. Fixture replay uses its recorded capture time when available; otherwise `fetched_at` is `unknown` and `replayed_at` records execution time.
-
-Default output minimizes agent context. Use a fuller view only when the user's request needs descriptions, images, extended reviewer metadata, or option detail.
-
-See [result contract](references/result-contract.md) and [capability reference](references/capabilities.md).
-
-## Safety Boundary
-
-Allowed:
-
-- public, stateless, read-only Map/Place/Booking requests;
-- bounded pagination and polite retry;
-- parsing saved sanitized fixtures;
-- local filtering and agent-authored summaries.
+Use only public, read-only requests and local fixture replay.
 
 Never:
 
-- log in or use a user's authenticated session;
-- send cookies, Authorization headers, `.netrc` credentials, or environment proxy credentials;
-- solve or bypass CAPTCHA, access controls, or blocks;
-- rotate identities to evade rate limits;
-- submit a reservation, payment, review, message, or other write action;
-- claim uncertain inventory, capacity, price, or completeness as confirmed;
-- commit raw captures containing cookies, tokens, tracking values, receipt URLs, or unnecessary reviewer identifiers.
+- use a logged-in browser or authenticated session;
+- send cookies, authorization headers, `.netrc` credentials, or environment proxy credentials;
+- solve or bypass CAPTCHA, access controls, blocks, or rate limits;
+- submit reservations, payments, reviews, messages, or profile changes;
+- switch to browser automation or a hosted proxy after a public request is rejected;
+- claim uncertain price, capacity, inventory, identity, or completeness as confirmed.
 
-When a public source rejects a request, return or report the typed error. Do not silently switch to browser automation or a hosted proxy.
+## References
 
-## Examples Are Non-Normative
+- Read [installation](references/installation.md) for supported skill paths and runtime setup.
+- Read [commands](references/capabilities.md) for exact inputs, outputs, and offline examples.
+- Read [result contract](references/result-contract.md) for status, errors, exit codes, and views.
+- Read [usage examples](references/usage-examples.md) for realistic requests and evidence limits.
 
-- [Accommodation discovery example](references/examples-accommodation.md)
-- [Local-business uses](references/examples-business.md)
+## Response requirements
 
-These show possible compositions only. They are not mandatory search sequences, routing rules, or limits on what the tools can do.
-
-## Done When
-
-- The requested evidence was collected or a typed reason explains why it could not be.
-- Partial, empty, blocked, rate-limited, and changed-upstream states are distinguished.
-- The answer cites the relevant Place/Booking links and observation time when useful.
-- No write, login, payment, or access-control boundary was crossed.
+- Answer from returned evidence, not assumptions.
+- Distinguish empty, partial, blocked, rate-limited, `upstream_changed`, and not-found cases.
+- State the observation time and source links when they affect the conclusion.
+- Stop at the read-only boundary.
