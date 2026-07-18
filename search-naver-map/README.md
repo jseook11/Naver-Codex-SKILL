@@ -50,11 +50,14 @@ bin/naver-place booking \
 
 조회·출력 범위는 `--view compact|standard|full`로 조절합니다. `compact`와 `standard`는 긴 설명과 이미지 배열을 줄이고 리뷰어 ID, 영수증 URL, 프로필 이미지 등을 제외합니다. `booking --view full`은 설명·이미지·옵션을 위해 추가 조회를 할 수 있습니다.
 
+메뉴 질문에서 구조화 메뉴가 없거나 답변에 부족하면 에이전트는 `detail --view full`의 공개 Place 이미지를 제한된 수만 내려받아 비전으로 메뉴판을 확인할 수 있습니다. 이 과정은 에이전트용 fallback이며 CLI가 이미지에서 메뉴를 자동 추출하는 기능은 아닙니다. 음식 사진만으로 메뉴명이나 판매 여부를 확정하지 않습니다.
+
 ## 문서 안내
 
 - 처음 설치하거나 경로를 바꿀 때: [installation.md](references/installation.md)
 - 명령 인수와 출력 필드를 확인할 때: [capabilities.md](references/capabilities.md)
 - 상태·오류·종료 코드를 처리할 때: [result-contract.md](references/result-contract.md)
+- 구조화 메뉴가 부족해 공개 이미지를 확인할 때: [menu-image-fallback.md](references/menu-image-fallback.md)
 - 코드 구조와 데이터 흐름을 볼 때: [architecture.md](references/architecture.md)
 - 자연어 요청 예시가 필요할 때: [usage-examples.md](references/usage-examples.md)
 

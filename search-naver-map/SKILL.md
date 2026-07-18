@@ -1,6 +1,6 @@
 ---
 name: search-naver-map
-description: Use public Naver Map, Place, visitor-review, and Booking data to find Korean places, inspect place details, compare public reviews, or check observed booking availability. Use only for public read-only research. Do not use for login, reservation submission, payment, review posting, access-control bypass, Naver Blog SERP tracking, or non-Naver services.
+description: Use public Naver Map, Place, visitor-review, and Booking data to find Korean places, inspect place details, compare public reviews, check observed booking availability, or verify menus from public Place images when structured menu data is insufficient. Use only for public read-only research. Do not use for login, reservation submission, payment, review posting, access-control bypass, Naver Blog SERP tracking, or non-Naver services.
 ---
 
 # Search Naver Map
@@ -33,6 +33,12 @@ Read `capabilities --json` before assuming an argument or enum.
 
 Choose the commands needed for the evidence requested. Do not apply a fixed search sequence or add industry-specific recommendation rules.
 
+## Menu evidence fallback
+
+Use structured `data.menus` as the primary menu source. If it cannot answer the user's menu question, rerun `detail` with `--view full` and follow [menu image fallback](references/menu-image-fallback.md) to download and inspect a bounded set of public Place images with vision.
+
+Judge sufficiency against the request, not a fixed menu-count threshold. Missing requested items, missing prices needed by the request, or an empty/unusable menu list can trigger the fallback. A food photo without readable menu text does not confirm that an item is sold.
+
 ## Read every result before answering
 
 - Check `status`, `completeness`, `warnings`, and `errors` even when the process exits with code `0`.
@@ -62,6 +68,7 @@ Never:
 - Read [installation](references/installation.md) for supported skill paths and runtime setup.
 - Read [commands](references/capabilities.md) for exact inputs, outputs, and offline examples.
 - Read [result contract](references/result-contract.md) for status, errors, exit codes, and views.
+- Read [menu image fallback](references/menu-image-fallback.md) when structured Place menus do not answer a menu-related request.
 - Read [usage examples](references/usage-examples.md) for realistic requests and evidence limits.
 
 ## Response requirements

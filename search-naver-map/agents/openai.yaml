@@ -1,4 +1,4 @@
 interface:
   display_name: "Search Naver Map"
   short_description: "네이버 지도·Place·리뷰·예약 공개 정보 조회"
-  default_prompt: "Use $search-naver-map to find places on Naver Map and, when needed, check details, visitor reviews, or observed booking availability. Report missing data and source links."
+  default_prompt: "Use $search-naver-map to find places on Naver Map and, when needed, check details, visitor reviews, or observed booking availability. If structured menus are insufficient, inspect a bounded set of public Place images with vision. Report evidence limits and source links."
