@@ -34,6 +34,11 @@ def test_capability_catalog_is_generated_from_all_public_subcommands(capsys) -> 
         "booking.availability",
     }
     assert "view" in {argument["name"] for argument in payload["common_arguments"]}
+    reviews = next(item for item in payload["capabilities"] if item["command"] == "reviews")
+    review_arguments = {argument["name"]: argument for argument in reviews["arguments"]}
+    assert review_arguments["limit"]["default"] == 10
+    assert {"latest_html", "recommended_html"} <= set(review_arguments)
+    assert {"page_size", "request_delay", "raw_dir"}.isdisjoint(review_arguments)
     booking = next(item for item in payload["capabilities"] if item["command"] == "booking")
     assert booking["required_one_of"] == [["query", "booking_url", "business_id"]]
 
@@ -74,22 +79,29 @@ def test_detail_fixture_can_report_enabled_missing_sources_as_partial(capsys) ->
     assert {error["code"] for error in payload["errors"]} == {"secondary_not_found"}
 
 
-def test_review_standard_view_replays_without_private_fields(capsys) -> None:
+def test_review_standard_view_replays_labeled_html_snapshots_without_private_fields(
+    capsys,
+) -> None:
     exit_code, payload = run_json(
         capsys,
         "reviews",
         "--place",
         "1234567890",
-        "--raw-dir",
-        str(FIXTURES / "reviews"),
+        "--latest-html",
+        str(FIXTURES / "reviews/latest.html"),
+        "--recommended-html",
+        str(FIXTURES / "reviews/recommended.html"),
         "--limit",
         "3",
-        "--request-delay",
-        "0",
     )
     assert exit_code == 0
     assert payload["status"] == "ok"
     assert payload["budget"]["requests_used"] == 0
+    assert set(payload["data"]["samples"]) == {
+        "latest",
+        "recommended",
+        "recommended_keyword_only",
+    }
     for review in payload["data"]["reviews"]:
         assert "reviewer_id" not in review
         assert "receipt_info_url" not in review
@@ -209,8 +221,10 @@ def test_standard_errors_do_not_expose_absolute_fixture_paths(
             "reviews",
             "--place",
             "1234567890",
-            "--raw-dir",
-            str(secret_root / "reviews"),
+            "--latest-html",
+            str(secret_root / "latest.html"),
+            "--recommended-html",
+            str(secret_root / "recommended.html"),
         ),
         (
             "booking",

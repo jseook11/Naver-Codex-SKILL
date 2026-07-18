@@ -87,31 +87,42 @@ bin/naver-place detail --place 1234567890
 
 ## `reviews`
 
-Place의 공개 방문자 리뷰를 지정한 수만큼 읽습니다.
+Place의 공개 방문자 리뷰 화면을 추천순과 최신순으로 한 번씩 읽고, 서로 섞지 않은 세 가지 표본을 반환합니다. 전체 리뷰를 순회하지 않습니다.
 
 ```bash
 bin/naver-place reviews \
   --place 1234567890 \
-  --limit 50 \
+  --limit 10 \
   --owner-reply exclude_replied
 ```
 
 주요 입력:
 
 - `--place`: 숫자 Place ID 또는 네이버 Place URL
-- `--limit`: 반환할 리뷰 수, 0~500
-- `--page-size`: 한 페이지에서 요청할 리뷰 수, 1~50
-- `--owner-reply all|exclude_replied|only_replied`: 사장님 답글 상태 필터
-- `--request-delay`: 다음 페이지 전 대기 시간, 기본 1.5초
-- `--raw-dir`: 저장된 `page-*.json`으로 오프라인 실행
+- `--limit`: 각 표본에서 반환할 최대 항목 수, 기본 10, 범위 0~10
+- `--owner-reply all|exclude_replied|only_replied`: 관찰한 각 표본 안에서만 적용하는 사장님 답글 상태 필터
+- `--recommended-html`, `--latest-html`: 저장된 추천순·최신순 HTML로 오프라인 실행. 둘을 함께 지정해야 함
+
+실시간 실행은 다음 공개 화면을 각각 GET 한 번으로 읽으며 커서나 다음 페이지를 요청하지 않습니다.
+
+- 추천순: `/place/{place_id}/review/visitor`
+- 최신순: `/place/{place_id}/review/visitor?reviewSort=recent`
+
+파서는 Apollo `ROOT_QUERY`의 `visitorReviews(...)` 인자를 JSON으로 해석하고 요청한 `businessId`와 아래 조건이 정확히 맞는 항목만 선택합니다. Apollo 상태 전체를 순회하거나 다른 목록의 리뷰를 합치지 않으며, 선택한 root의 `items` 순서를 그대로 유지합니다.
+
+| 결과 표본 | 입력 화면 | 선택 조건 | 포함 항목 |
+| --- | --- | --- | --- |
+| `latest` | 최신순 | `includeContent=true`, `sort=recent` | 정규화한 `text`가 비어 있지 않은 본문 리뷰 |
+| `recommended` | 추천순 | `includeContent=true`, `sort` 없음 | 정규화한 `text`가 비어 있지 않은 본문 리뷰 |
+| `recommended_keyword_only` | 추천순 | `includeContent=false`, `sort` 없음 | 본문 없이 공개 키워드 신호가 있는 별도 리뷰 표본 |
 
 주요 결과:
 
-- 리뷰 본문, 공개 닉네임, 방문·작성 시각, 태그와 이미지 수
-- 사장님 답글 여부와 답글 작성 시각
-- 네이버가 표시한 리뷰 수, 반환한 수, 확인한 페이지 수
+- `data.reviews`: 중복 ID를 합친 정규화 리뷰. 각 항목의 `sample_sources`와 `sample_ranks`가 표본 소속과 원본 순서를 표시
+- `data.samples.latest`, `recommended`, `recommended_keyword_only`: 표본별 `review_ids`, `returned_count`, `total_available`, 정렬·리뷰 유형
+- 공개 닉네임, 방문·작성 시각, 태그, 이미지 수와 사장님 답글 신호
 
-커서가 반복되거나 사라진 경우, 표시된 총 건수보다 일찍 끝난 경우, 다음 페이지가 실패한 경우를 별도 오류로 남깁니다.
+`total_available`은 네이버가 표시한 원본 그룹의 전체 규모를 이해하기 위한 문맥 정보입니다. 수집 목표가 아니므로 값이 `returned_count`보다 커도, 추천순·최신순 snapshot을 모두 정상 처리했다면 `complete: true`, `stop_reason: snapshot_complete`입니다. 필수 root가 없거나 모호하면 빈 표본으로 넘기지 않고 `upstream_changed`를 반환합니다. 최신순을 먼저 읽기 때문에 두 번째 추천순 화면이 실패하면 이미 확인한 최신 표본은 `partial`로 보존됩니다.
 
 ## `booking`
 
@@ -168,7 +179,7 @@ bin/naver-place booking \
 
 - `search --html`: 저장된 지도 HTML만 읽으며 네트워크를 사용하지 않음
 - `detail --offline`: `--html`, `--feed-html`, `--hours-json`만 사용하고 네트워크를 금지함. 필요한 파일이 빠지면 오류로 기록
-- `reviews --raw-dir`: 저장된 `page-*.json`만 읽으며 네트워크를 사용하지 않음
+- `reviews --recommended-html ... --latest-html ...`: 저장된 두 HTML snapshot만 읽으며 네트워크를 사용하지 않음. 두 옵션을 함께 지정해야 함
 - `booking --raw-dir`: Booking 응답만 재생함. `--query`를 함께 쓰면 지도 후보 탐색에는 네트워크를 사용
 
 Booking까지 네트워크 없이 재현하려면 `--query` 대신 저장된 응답에 맞는 `--booking-url` 또는 `--business-id`와 `--business-type-id`를 사용합니다.

@@ -40,7 +40,7 @@ CAPABILITY_INFO = {
     },
     "reviews": {
         "capability": "place.reviews",
-        "description": "Collect bounded public visitor reviews with cursor pagination.",
+        "description": "Collect bounded latest and recommended public review snapshots.",
     },
     "booking": {
         "capability": "booking.availability",
@@ -150,8 +150,12 @@ def build_parser() -> CapabilityArgumentParser:
 
     reviews = subparsers.add_parser("reviews", help=CAPABILITY_INFO["reviews"]["description"])
     reviews.add_argument("--place", required=True, help="Numeric Place ID or Naver Place URL.")
-    reviews.add_argument("--limit", type=int, default=20, help="Maximum normalized reviews (0-500).")
-    reviews.add_argument("--page-size", type=int, default=10, help="Reviews requested per page (1-50).")
+    reviews.add_argument(
+        "--limit",
+        type=int,
+        default=10,
+        help="Maximum reviews from each public snapshot group (0-10).",
+    )
     reviews.add_argument(
         "--owner-reply",
         choices=("all", "exclude_replied", "only_replied"),
@@ -159,13 +163,15 @@ def build_parser() -> CapabilityArgumentParser:
         help="Filter on the public owner-reply signal.",
     )
     reviews.add_argument(
-        "--request-delay", type=float, default=1.5, help="Delay between review pages in seconds."
+        "--latest-html",
+        help="Replay saved sanitized latest-sort visitor-review HTML.",
     )
     reviews.add_argument(
-        "--raw-dir", help="Replay sanitized page-*.json responses from a local directory."
+        "--recommended-html",
+        help="Replay saved sanitized recommended-sort visitor-review HTML.",
     )
     reviews.add_argument("--user-agent", help="Override the public-request User-Agent.")
-    _add_common_arguments(reviews, include_connect_timeout=False)
+    _add_common_arguments(reviews)
 
     booking = subparsers.add_parser("booking", help=CAPABILITY_INFO["booking"]["description"])
     source = booking.add_mutually_exclusive_group(required=True)
@@ -389,19 +395,31 @@ def _run_capability(args: argparse.Namespace) -> CapabilityResult:
             headers=_headers(args.user_agent),
         )
     if args.command == "reviews":
+        latest_html = _read_text(args.latest_html)
+        recommended_html = _read_text(args.recommended_html)
+        offline = latest_html is not None or recommended_html is not None
         return get_reviews(
             args.place,
             limit=args.limit,
-            page_size=args.page_size,
             owner_reply=args.owner_reply,
-            request_delay=args.request_delay,
             view=args.view,
             request_budget=args.request_budget,
             max_elapsed_seconds=args.max_elapsed_seconds,
-            raw_dir=args.raw_dir,
+            latest_html=latest_html,
+            recommended_html=recommended_html,
+            latest_source_url=(
+                f"fixture://{Path(args.latest_html).name}"
+                if args.latest_html
+                else None
+            ),
+            recommended_source_url=(
+                f"fixture://{Path(args.recommended_html).name}"
+                if args.recommended_html
+                else None
+            ),
+            transport=None if offline else _transport(args, budget),
             budget=budget,
             user_agent=args.user_agent,
-            timeout=args.read_timeout,
         )
     if args.command == "booking":
         return get_booking_availability(

@@ -55,7 +55,7 @@ class LegacyFormatter:
                 "place_id": data.get("place_id"),
                 "place_url": data.get("place_url"),
                 "fetched_at": result.provenance[0].fetched_at if result.provenance else None,
-                "source": "naver_place_visitor_reviews_graphql",
+                "source": "naver_place_visitor_review_snapshots",
                 "limit": result.request.get("limit"),
                 "filters": {"exclude_owner_replied": owner_reply == "exclude_replied"},
                 "pagination": {

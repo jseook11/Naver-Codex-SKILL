@@ -53,6 +53,8 @@
 
 검색 결과 0건은 `empty`입니다. 사용자가 직접 지정한 Place ID나 Booking ID를 찾지 못했을 때만 `not_found`를 사용합니다.
 
+리뷰에서 공개 추천순·최신순 snapshot 두 개를 정상 처리했다면, 표본의 `total_available`이 반환 수보다 커도 `ok`일 수 있습니다. 전체 리뷰를 순회하는 명령이 아니므로 원본 총수와의 차이만으로 `partial`이 되지 않습니다. 한 snapshot만 처리하고 다른 하나가 실패했다면 사용할 수 있는 표본을 남긴 `partial`입니다.
+
 ## `completeness`
 
 `complete`가 `false`이면 `stop_reason`을 확인합니다. 명령에 따라 아래 정보가 함께 들어갑니다.
@@ -64,6 +66,8 @@
 두 필드의 정확한 대상은 명령마다 다릅니다. 예를 들어 `booking`에서는 선택된 사업 후보 수와 처리를 마친 후보 수를 뜻할 수 있습니다.
 
 예를 들어 지도 검색 화면에 더 많은 결과가 있다고 표시됐지만 현재 화면에서 요청 수를 채우지 못하면 `source_page_limit`으로 끝납니다.
+
+`reviews`의 완료 범위는 전체 upstream 리뷰가 아니라 추천순·최신순 HTML snapshot 두 개입니다. `limit`은 `0..10` 범위에서 `latest`, `recommended`, `recommended_keyword_only` 각 표본에 적용됩니다. 두 snapshot과 세 root를 정상 처리하면 `complete: true`, `stop_reason: snapshot_complete`입니다. `total_available`은 표본별 문맥 정보이지 완료 목표가 아니므로 `total_available > returned_count`만으로 `source_page_limit`을 사용하지 않습니다. `pages_fetched`는 처리한 source snapshot 수입니다. `requested_count`와 `returned_count`는 세 표본의 슬롯을 합산하므로 여러 표본에 중복 노출된 리뷰도 각각 계산합니다. 반면 `data.returned_count`는 `data.reviews`의 중복 제거된 항목 수입니다.
 
 ## 오류 코드
 
@@ -110,11 +114,15 @@
 
 `full`은 공개 응답에 포함된 리뷰어·영수증 관련 메타데이터를 더 많이 담을 수 있습니다. 어떤 출력 범위도 완전한 익명화를 보장하지 않습니다.
 
+리뷰의 출력 범위는 표본 수, 원본 순서, root 선택을 바꾸지 않습니다. `data.samples.latest`와 `recommended`의 `review_ids`는 본문이 있는 리뷰만 가리키고, `recommended_keyword_only.review_ids`는 별도 공개 키워드 신호를 가리킵니다. 실제 정규화 항목은 중복 제거된 `data.reviews`에 있으며 `sample_sources`로 유형을 구분합니다. `full`도 추가 리뷰 화면을 요청하지 않습니다.
+
 ## 출처와 시각
 
 실시간 조회의 `fetched_at`은 정보를 관찰한 시각입니다. 저장된 테스트 데이터에는 기록 당시 시각이 있으면 그 값을 사용합니다.
 
 기록 시각이 없으면 `fetched_at`은 `unknown`이고 `provenance[].detail.replayed_at`에 재현 실행 시각을 남깁니다. `replayed_at`은 최신 예약·가격을 확인한 시각이 아닙니다.
+
+실시간 리뷰 provenance는 추천순과 최신순 공개 HTML snapshot을 각각 가리킵니다. 저장된 두 HTML로 재생하면 둘 다 `live: false`이며, 재생 시각을 실제 리뷰 관찰 시각으로 해석하지 않습니다.
 
 ## 요청 상태와 인증
 
@@ -122,4 +130,4 @@
 
 `search`와 `detail`은 HTTPS 네이버 주소로 향하는 리다이렉트를 최대 5번 따르며 각 이동도 요청 수에 포함합니다. 알려진 로그인·CAPTCHA 화면은 `blocked`로 분류합니다.
 
-`reviews`와 `booking`은 리다이렉트를 따르지 않습니다. 어느 명령도 로그인이나 접근 제한을 우회하지 않습니다.
+`booking`은 리다이렉트를 따르지 않습니다. `search`, `detail`, `reviews`는 HTTPS·네이버 호스트·인증정보 제거 조건을 만족하는 제한된 리다이렉트만 따릅니다. 어느 명령도 로그인이나 접근 제한을 우회하지 않습니다.

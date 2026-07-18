@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <title>Sanitized recommended visitor-review snapshot</title>
+  </head>
+  <body>
+    <main>Sanitized fixture: no real reviewer or receipt data.</main>
+    <script>
+      window.__APOLLO_STATE__ = {
+        "ROOT_QUERY": {
+          "__typename": "Query",
+          "visitorReviews({\"input\":{\"businessId\":\"1234567890\",\"includeContent\":true,\"size\":10}})": {
+            "__typename": "VisitorReviewConnection",
+            "total": 19,
+            "items": [
+              {"__ref": "VisitorReview:recommended-001:true"},
+              {"__ref": "VisitorReview:recommended-002:true"},
+              {"__ref": "VisitorReview:recommended-003:true"},
+              {"__ref": "VisitorReview:shared-001:true"}
+            ]
+          },
+          "visitorReviews({\"input\":{\"businessId\":\"1234567890\",\"includeContent\":false,\"size\":10}})": {
+            "__typename": "VisitorReviewConnection",
+            "total": 7,
+            "items": [
+              {"__ref": "VisitorReview:keyword-001:false"},
+              {"__ref": "VisitorReview:keyword-002:false"}
+            ]
+          },
+          "visitorReviews({\"input\":{\"businessId\":\"1234567890\",\"includeContent\":true,\"size\":10,\"sort\":\"recent\"}})": {
+            "__typename": "VisitorReviewConnection",
+            "total": 55,
+            "items": [{"__ref": "VisitorReview:recommended-distractor-latest:true"}]
+          },
+          "visitorReviews({\"input\":{\"businessId\":\"9999999999\",\"includeContent\":true,\"size\":10}})": {
+            "__typename": "VisitorReviewConnection",
+            "total": 66,
+            "items": [{"__ref": "VisitorReview:recommended-distractor-other-business:true"}]
+          }
+        },
+        "VisitorReview:recommended-001:true": {
+          "__typename": "VisitorReview",
+          "id": "recommended-001",
+          "body": "추천순 첫 번째 샘플 리뷰입니다.",
+          "representativeVisitDateTime": "2026-07-10T12:00:00+09:00",
+          "created": "2026-07-10T13:00:00+09:00",
+          "visitCount": 4,
+          "receiptInfoUrl": "https://example.invalid/private-recommended-receipt-1",
+          "author": {"__ref": "VisitorReviewAuthor:recommended-001"},
+          "votedKeywords": [{"code": "value", "name": "가성비가 좋아요"}],
+          "media": [],
+          "reply": null
+        },
+        "VisitorReviewAuthor:recommended-001": {
+          "__typename": "VisitorReviewAuthor",
+          "id": "private-recommended-author-id-1",
+          "objectId": "private-recommended-object-id-1",
+          "nickname": "추천방문자1",
+          "review": {"totalCount": 52, "imageCount": 8}
+        },
+        "VisitorReview:recommended-002:true": {
+          "__typename": "VisitorReview",
+          "id": "recommended-002",
+          "body": "추천순 두 번째 샘플 리뷰입니다.",
+          "representativeVisitDateTime": "2026-06-30T12:00:00+09:00",
+          "created": "2026-06-30T13:00:00+09:00",
+          "visitCount": 2,
+          "author": {"__ref": "VisitorReviewAuthor:recommended-002"},
+          "votedKeywords": [{"code": "clean", "name": "매장이 청결해요"}],
+          "media": [],
+          "reply": {
+            "body": "고맙습니다.",
+            "created": "2026-07-01T09:00:00+09:00"
+          }
+        },
+        "VisitorReviewAuthor:recommended-002": {
+          "__typename": "VisitorReviewAuthor",
+          "nickname": "추천방문자2"
+        },
+        "VisitorReview:recommended-003:true": {
+          "__typename": "VisitorReview",
+          "id": "recommended-003",
+          "body": "추천순 세 번째 샘플 리뷰입니다.",
+          "representativeVisitDateTime": "2026-07-05T12:00:00+09:00",
+          "created": "2026-07-05T13:00:00+09:00",
+          "visitCount": 1,
+          "author": {"__ref": "VisitorReviewAuthor:recommended-003"},
+          "votedKeywords": [],
+          "media": [],
+          "reply": null
+        },
+        "VisitorReviewAuthor:recommended-003": {
+          "__typename": "VisitorReviewAuthor",
+          "nickname": "추천방문자3"
+        },
+        "VisitorReview:shared-001:true": {
+          "__typename": "VisitorReview",
+          "id": "shared-001",
+          "body": "최신순과 추천순에 함께 노출된 샘플 리뷰입니다.",
+          "representativeVisitDateTime": "2026-07-14T12:00:00+09:00",
+          "nickname": "공통방문자",
+          "votedKeywords": [{"code": "shared", "name": "다시 방문하고 싶어요"}],
+          "reply": null
+        },
+        "VisitorReview:keyword-001:false": {
+          "__typename": "VisitorReview",
+          "id": "keyword-001",
+          "representativeVisitDateTime": "2026-07-09T12:00:00+09:00",
+          "visitCount": 1,
+          "nickname": "키워드방문자1",
+          "votedKeywords": [
+            {"code": "taste", "name": "음식이 맛있어요"},
+            {"code": "kind", "name": "친절해요"}
+          ],
+          "reply": null
+        },
+        "VisitorReview:keyword-002:false": {
+          "__typename": "VisitorReview",
+          "id": "keyword-002",
+          "representativeVisitDateTime": "2026-07-08T12:00:00+09:00",
+          "visitCount": 3,
+          "nickname": "키워드방문자2",
+          "votedKeywords": [{"code": "space", "name": "공간이 편안해요"}],
+          "reply": null
+        },
+        "VisitorReview:recommended-distractor-latest:true": {
+          "__typename": "VisitorReview",
+          "id": "recommended-distractor-latest",
+          "body": "추천 목록에 섞이면 안 되는 최신순 리뷰입니다.",
+          "representativeVisitDateTime": "2026-07-19T12:00:00+09:00",
+          "nickname": "방해최신"
+        },
+        "VisitorReview:recommended-distractor-other-business:true": {
+          "__typename": "VisitorReview",
+          "id": "recommended-distractor-other-business",
+          "body": "다른 사업장의 추천 리뷰입니다.",
+          "representativeVisitDateTime": "2026-07-19T12:00:00+09:00",
+          "nickname": "다른사업장"
+        }
+      };
+    </script>
+  </body>
+</html>

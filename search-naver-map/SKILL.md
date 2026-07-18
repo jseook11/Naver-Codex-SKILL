@@ -28,10 +28,16 @@ Read `capabilities --json` before assuming an argument or enum.
 
 - `search`: find ordered places for a Map query and return IDs, addresses, coordinates, observed positions, and links.
 - `detail`: read the public profile, hours, menus, links, feeds, and blog-review metadata for a Place ID or URL.
-- `reviews`: read a bounded number of public visitor reviews and optionally filter by owner-reply state.
+- `reviews`: read three labeled public visitor-review samples—latest content, recommended content, and recommended keyword-only—up to 10 items per sample, with an optional owner-reply filter.
 - `booking`: read public accommodation inventory, date prices, capacity, options, or time slots from a query, Booking URL, or business ID.
 
 Choose the commands needed for the evidence requested. Do not apply a fixed search sequence or add industry-specific recommendation rules.
+
+## Review evidence
+
+Treat `reviews` as bounded evidence, not an exhaustive review collection. It reads the public recommended and latest visitor-review HTML snapshots once each and does not paginate. Use `data.samples.*.review_ids` and each normalized review's `sample_sources` to keep `latest`, `recommended`, and `recommended_keyword_only` membership distinct. Keyword-only entries do not supply missing review text or increase either content sample. Owner-reply filtering applies only within the observed snapshots and never triggers more requests.
+
+For review results, `complete: true` means both requested snapshots were parsed within this contract. It does not mean every upstream review was collected. `total_available` is context only, so a larger total does not by itself make the result `partial`.
 
 ## Menu evidence fallback
 

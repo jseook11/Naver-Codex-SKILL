@@ -36,7 +36,7 @@ bin/naver-place search --query "성수 떡볶이" --limit 5
 bin/naver-place detail --place 1234567890
 
 # 방문자 리뷰
-bin/naver-place reviews --place 1234567890 --limit 20
+bin/naver-place reviews --place 1234567890 --limit 10
 
 # 숙박 예약 정보
 bin/naver-place booking \
@@ -48,7 +48,9 @@ bin/naver-place booking \
 
 명령은 JSON을 출력합니다. `status`가 `partial`이면 확인된 데이터가 남아 있어도 일부 조회가 끝나지 않은 상태입니다. `errors`, `warnings`, `completeness`를 함께 확인하세요.
 
-조회·출력 범위는 `--view compact|standard|full`로 조절합니다. `compact`와 `standard`는 긴 설명과 이미지 배열을 줄이고 리뷰어 ID, 영수증 URL, 프로필 이미지 등을 제외합니다. `booking --view full`은 설명·이미지·옵션을 위해 추가 조회를 할 수 있습니다.
+`reviews`는 전체 리뷰를 순회하지 않습니다. 공개 방문자 리뷰 화면을 추천순과 최신순으로 한 번씩 읽어 `latest`, `recommended`, `recommended_keyword_only` 세 표본을 각각 최대 10개 반환합니다. `total_available`은 전체 규모를 이해하기 위한 문맥 정보이지 추가 페이지 수집 목표가 아닙니다.
+
+조회·출력 범위는 `--view compact|standard|full`로 조절합니다. `compact`와 `standard`는 긴 설명과 이미지 배열을 줄이고 리뷰어 ID, 영수증 URL, 프로필 이미지 등을 제외합니다. 리뷰의 `full`도 표본 수나 조회 범위를 늘리지 않습니다. `booking --view full`은 설명·이미지·옵션을 위해 추가 조회를 할 수 있습니다.
 
 메뉴 질문에서 구조화 메뉴가 없거나 답변에 부족하면 에이전트는 `detail --view full`의 공개 Place 이미지를 제한된 수만 내려받아 비전으로 메뉴판을 확인할 수 있습니다. 이 과정은 에이전트용 fallback이며 CLI가 이미지에서 메뉴를 자동 추출하는 기능은 아닙니다. 음식 사진만으로 메뉴명이나 판매 여부를 확정하지 않습니다.
 
